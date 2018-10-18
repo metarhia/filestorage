@@ -1,0 +1,38 @@
+{
+  "name": "filestorage",
+  "version": "0.1.0",
+  "author": "",
+  "description": "File storage",
+  "main": "./filestorage.js",
+  "license": "MIT",
+  "keywords": [
+    "fs",
+    "filestorage"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/metarhia/filestorage.git"
+  },
+  "bugs": {
+    "url": "https://github.com/metarhia/filestorage/issues"
+  },
+  "homepage": "https://github.com/metarhia/filestorage#readme",
+  "scripts": {
+    "test": "eslint . && metatests test",
+    "lint": "eslint ."
+  },
+  "engines": {
+    "node": ">=6.0.0"
+  },
+  "dependencies": {
+    "compressing": "^1.3.1",
+    "crc": "^3.8.0",
+    "metarhia-common": "^0.0.33"
+  },
+  "devDependencies": {
+    "eslint": "^5.9.0",
+    "eslint-config-metarhia": "^6.0.0",
+    "eslint-plugin-import": "^2.14.0",
+    "metatests": "^0.2.4"
+  }
+}
