@@ -5,7 +5,7 @@ const path = require('path');
 const { create } = require('..');
 const utils = require('../lib/utils');
 const metatests = require('metatests');
-const common = require('metarhia-common');
+const common = require('@metarhia/common');
 
 const testDir = path.join(__dirname, 'fs-root');
 const minCompressSize = 1000;
