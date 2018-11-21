@@ -10,8 +10,15 @@ node_js:
 os:
   - linux
   - osx
+  - windows
 
 sudo: false
+
+before_script:
+  - cd $TRAVIS_BUILD_DIR
+  - if [[ "$TRAVIS_OS_NAME" == "windows" ]]; then
+     find . -name '*.js' -type f -print0 | xargs -0 sed -i 's/\r//g';
+    fi
 
 script:
   - npm test

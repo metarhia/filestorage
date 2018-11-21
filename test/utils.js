@@ -9,10 +9,22 @@ const testDir = path.join(__dirname, 'root-fs');
 
 metatests.case('', utils, {
   'getFilepath': [
-    ['/dir0', 'dir1', 'dir2', 'dir3', '/dir0/dir1/dir2/dir3.' + utils.FS_EXT],
-    ['/dir0', 'dir1/dir2', 'dir3', '/dir0/dir1/dir2/dir3.' + utils.FS_EXT],
-    ['/dir0/dir1/dir2/dir3', '/dir0/dir1/dir2/dir3.' + utils.FS_EXT],
-    ['dir0', 'dir1', 'dir2', 'dir3',  'dir0/dir1/dir2/dir3.' + utils.FS_EXT],
+    [
+      '/dir0', 'dir1', 'dir2', 'dir3',
+      `${path.join('/dir0', 'dir1', 'dir2', 'dir3')}.${utils.FS_EXT}`,
+    ],
+    [
+      '/dir0', 'dir1/dir2', 'dir3',
+      `${path.join('/dir0', 'dir1/dir2', 'dir3')}.${utils.FS_EXT}`,
+    ],
+    [
+      '/dir0/dir1/dir2/dir3',
+      `${path.join('/dir0/dir1/dir2/dir3')}.${utils.FS_EXT}`,
+    ],
+    [
+      'dir0', 'dir1', 'dir2', 'dir3',
+      `${path.join('dir0', 'dir1', 'dir2', 'dir3')}.${utils.FS_EXT}`,
+    ],
   ],
   'computeHash': [
     [
