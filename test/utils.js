@@ -60,6 +60,18 @@ metatests.case('', utils, {
   ],
 });
 
+metatests.testSync('getDataStats', test => {
+  const data = 'data6';
+  const cs = '9c67b4b76a18503009f542ef7c93dc7ac94aebbc6141515bea4e63e3068373a6';
+  const dh = 'c9aeb905';
+  const dataSize = 5;
+
+  const stats = utils.getDataStats(data, 'SHA256', 'CRC32');
+  test.strictSame(stats.checksum, cs);
+  test.strictSame(stats.dedupHash, dh);
+  test.strictSame(stats.size, dataSize);
+});
+
 metatests.test('', test => {
   const dir = path.join(testDir, 'some', 'path', 'to', 'nested', 'dir');
   utils.mkdirp(dir, err => {
