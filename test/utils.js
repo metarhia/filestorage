@@ -8,13 +8,18 @@ const metatests = require('metatests');
 const testDir = path.join(__dirname, 'utils-test-root');
 
 metatests.case('', utils, {
-  'getFilepath': [
+  getFilepath: [
     [
-      '/dir0', 'dir1', 'dir2', 'dir3',
+      '/dir0',
+      'dir1',
+      'dir2',
+      'dir3',
       `${path.join('/dir0', 'dir1', 'dir2', 'dir3')}.${utils.FS_EXT}`,
     ],
     [
-      '/dir0', 'dir1/dir2', 'dir3',
+      '/dir0',
+      'dir1/dir2',
+      'dir3',
       `${path.join('/dir0', 'dir1/dir2', 'dir3')}.${utils.FS_EXT}`,
     ],
     [
@@ -22,11 +27,14 @@ metatests.case('', utils, {
       `${path.join('/dir0/dir1/dir2/dir3')}.${utils.FS_EXT}`,
     ],
     [
-      'dir0', 'dir1', 'dir2', 'dir3',
+      'dir0',
+      'dir1',
+      'dir2',
+      'dir3',
       `${path.join('dir0', 'dir1', 'dir2', 'dir3')}.${utils.FS_EXT}`,
     ],
   ],
-  'computeHash': [
+  computeHash: [
     [
       'data0',
       'SHA256',
@@ -42,21 +50,9 @@ metatests.case('', utils, {
       'SHA256',
       'd98cf53e0c8b77c14a96358d5b69584225b4bb9026423cbc2f7b0161894c402c',
     ],
-    [
-      'data3',
-      'CRC32',
-      'b9c44d8a',
-    ],
-    [
-      'data4',
-      'CRC32',
-      '27a0d829',
-    ],
-    [
-      'data5',
-      'CRC32',
-      '50a7e8bf',
-    ],
+    ['data3', 'CRC32', 'b9c44d8a'],
+    ['data4', 'CRC32', '27a0d829'],
+    ['data5', 'CRC32', '50a7e8bf'],
   ],
 });
 
@@ -93,12 +89,15 @@ metatests.test('', test => {
         test.error(err);
         test.strictSame(fs.statSync(file).size < 4000, true);
 
-        utils.uncompress(file, { compression: 'ZIP', encoding: 'utf8' },
+        utils.uncompress(
+          file,
+          { compression: 'ZIP', encoding: 'utf8' },
           (err, d) => {
             test.error(err);
             test.strictSame(d, data);
             finish(test);
-          });
+          }
+        );
       });
     });
   });
