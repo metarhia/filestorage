@@ -1,9 +1,8 @@
 {
-  "name": "filestorage",
+  "name": "@metarhia/filestorage",
   "version": "0.1.0",
   "author": "",
-  "description": "File storage",
-  "main": "./filestorage.js",
+  "description": "Metarhia File Storage",
   "license": "MIT",
   "keywords": [
     "fs",
@@ -17,6 +16,10 @@
     "url": "https://github.com/metarhia/filestorage/issues"
   },
   "homepage": "https://github.com/metarhia/filestorage#readme",
+  "main": "filestorage.js",
+  "files": [
+    "lib/"
+  ],
   "scripts": {
     "test": "eslint . && metatests test",
     "lint": "eslint ."
