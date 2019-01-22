@@ -5,7 +5,7 @@ const path = require('path');
 const utils = require('../lib/utils');
 const metatests = require('metatests');
 
-const testDir = path.join(__dirname, 'root-fs');
+const testDir = path.join(__dirname, 'utils-test-root');
 
 metatests.case('', utils, {
   'getFilepath': [
@@ -72,6 +72,13 @@ metatests.testSync('getDataStats', test => {
   test.strictSame(stats.size, dataSize);
 });
 
+const finish = test => {
+  utils.rmdirp(testDir, err => {
+    test.error(err);
+    test.end();
+  });
+};
+
 metatests.test('', test => {
   const dir = path.join(testDir, 'some', 'path', 'to', 'nested', 'dir');
   utils.mkdirp(dir, err => {
@@ -90,8 +97,7 @@ metatests.test('', test => {
           (err, d) => {
             test.error(err);
             test.strictSame(d, data);
-            utils.rmdirp(testDir);
-            test.end();
+            finish(test);
           });
       });
     });

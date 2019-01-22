@@ -7,7 +7,7 @@ const utils = require('../lib/utils');
 const metatests = require('metatests');
 const common = require('@metarhia/common');
 
-const testDir = path.join(__dirname, 'fs-root');
+const testDir = path.join(__dirname, 'test-root');
 const minCompressSize = 1000;
 
 const fsTest = metatests.test('Filestorage');
@@ -21,8 +21,10 @@ fsTest.beforeEach((test, cb) => {
 });
 
 fsTest.afterEach((test, cb) => {
-  utils.rmdirp(testDir);
-  cb();
+  utils.rmdirp(testDir, err => {
+    test.error(err);
+    cb();
+  });
 });
 
 fsTest.test('Create root directory on create', test => {
@@ -30,8 +32,10 @@ fsTest.test('Create root directory on create', test => {
   create({ dir }, err => {
     test.error(err);
     test.strictSame(fs.existsSync(dir), true);
-    utils.rmdirp(dir);
-    test.end();
+    utils.rmdirp(dir, err => {
+      test.error(err);
+      test.end();
+    });
   });
 });
 
