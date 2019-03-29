@@ -29,18 +29,18 @@
     "node": ">=8.0.0"
   },
   "dependencies": {
-    "@metarhia/common": "^1.2.1",
+    "@metarhia/common": "^1.5.0",
     "compressing": "^1.4.0",
     "crc": "^3.8.0"
   },
   "devDependencies": {
-    "eslint": "^5.12.1",
+    "eslint": "^5.16.0",
     "eslint-config-metarhia": "^6.1.0",
     "eslint-config-prettier": "^3.6.0",
-    "eslint-plugin-import": "^2.15.0",
-    "metasync": "^0.3.31",
-    "metatests": "^0.4.0",
+    "eslint-plugin-import": "^2.17.2",
     "eslint-plugin-prettier": "^3.0.1",
-    "prettier": "1.16.x"
+    "metasync": "^0.3.31",
+    "metatests": "^0.6.5",
+    "prettier": "^1.17.0"
   }
 }
