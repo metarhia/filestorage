@@ -4,6 +4,7 @@ const fs = require('fs');
 const path = require('path');
 const utils = require('../lib/utils');
 const metatests = require('metatests');
+const common = require('@metarhia/common');
 
 const testDir = path.join(__dirname, 'utils-test-root');
 
@@ -77,7 +78,7 @@ const finish = test => {
 
 metatests.test('', test => {
   const dir = path.join(testDir, 'some', 'path', 'to', 'nested', 'dir');
-  utils.mkdirp(dir, err => {
+  common.mkdirp(dir, err => {
     test.error(err);
     test.strictSame(fs.existsSync(dir), true);
 
