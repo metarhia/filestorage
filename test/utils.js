@@ -1,10 +1,9 @@
 'use strict';
 
-const fs = require('fs');
+const fs = require('../lib/fs');
 const path = require('path');
 const utils = require('../lib/utils');
 const metatests = require('metatests');
-const common = require('@metarhia/common');
 
 const testDir = path.join(__dirname, 'utils-test-root');
 
@@ -69,37 +68,21 @@ metatests.testSync('getDataStats', test => {
   test.strictSame(stats.size, dataSize);
 });
 
-const finish = test => {
-  utils.rmdirp(testDir, err => {
-    test.error(err);
-    test.end();
-  });
-};
-
-metatests.test('', test => {
+metatests.test('Compress and uncompress file', async test => {
   const dir = path.join(testDir, 'some', 'path', 'to', 'nested', 'dir');
-  common.mkdirp(dir, err => {
-    test.error(err);
-    test.strictSame(fs.existsSync(dir), true);
+  await utils.mkdirRecursive(dir);
+  await fs.access(testDir);
 
-    const file = path.join(testDir, 'file');
-    const data = 'data'.repeat(1000);
-    fs.writeFile(file, data, err => {
-      test.error(err);
-      utils.compress(file, 1024, 'ZIP', err => {
-        test.error(err);
-        test.strictSame(fs.statSync(file).size < 4000, true);
+  const file = path.join(testDir, 'file');
+  const data = 'data'.repeat(1000);
+  const opts = { compression: 'ZIP', encoding: 'utf8' };
 
-        utils.uncompress(
-          file,
-          { compression: 'ZIP', encoding: 'utf8' },
-          (err, d) => {
-            test.error(err);
-            test.strictSame(d, data);
-            finish(test);
-          }
-        );
-      });
-    });
-  });
+  await fs.writeFile(file, data);
+  await utils.compress(file, 1024, 'ZIP');
+
+  const { size } = await fs.stat(file);
+  test.assert(size < data.length);
+
+  await test.resolves(utils.uncompress(file, opts), data);
+  await utils.rmRecursive(testDir);
 });
