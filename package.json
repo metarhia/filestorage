@@ -29,7 +29,7 @@
     "node": ">=8.0.0"
   },
   "dependencies": {
-    "@metarhia/common": "^2.0.0",
+    "@metarhia/common": "^2.1.0",
     "compressing": "^1.4.0",
     "crc": "^3.8.0"
   },
