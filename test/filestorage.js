@@ -23,7 +23,7 @@ fsTest.beforeEach(async () => {
   return { storage, id };
 });
 
-fsTest.afterEach(() => utils.rmRecursive(testDir));
+fsTest.afterEach(() => common.rmRecursivePromise(testDir));
 
 fsTest.test('Create root directory on create', () => fs.access(testDir));
 

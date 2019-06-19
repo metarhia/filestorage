@@ -1,8 +1,9 @@
 'use strict';
 
 const fs = require('../lib/fs');
-const path = require('path');
 const utils = require('../lib/utils');
+const path = require('path');
+const common = require('@metarhia/common');
 const metatests = require('metatests');
 
 const testDir = path.join(__dirname, 'utils-test-root');
@@ -54,23 +55,24 @@ metatests.case('', utils, {
     ['data4', 'CRC32', '27a0d829'],
     ['data5', 'CRC32', '50a7e8bf'],
   ],
-});
-
-metatests.testSync('getDataStats', test => {
-  const data = 'data6';
-  const cs = '9c67b4b76a18503009f542ef7c93dc7ac94aebbc6141515bea4e63e3068373a6';
-  const dh = 'c9aeb905';
-  const dataSize = 5;
-
-  const stats = utils.getDataStats(data, 'SHA256', 'CRC32');
-  test.strictSame(stats.checksum, cs);
-  test.strictSame(stats.dedupHash, dh);
-  test.strictSame(stats.size, dataSize);
+  getDataStats: [
+    [
+      'data6',
+      'SHA256',
+      'CRC32',
+      {
+        checksum:
+          '9c67b4b76a18503009f542ef7c93dc7ac94aebbc6141515bea4e63e3068373a6',
+        dedupHash: 'c9aeb905',
+        size: 5,
+      },
+    ],
+  ],
 });
 
 metatests.test('Compress and uncompress file', async test => {
   const dir = path.join(testDir, 'some', 'path', 'to', 'nested', 'dir');
-  await utils.mkdirRecursive(dir);
+  await utils.mkdirpPromise(dir);
   await fs.access(testDir);
 
   const file = path.join(testDir, 'file');
@@ -84,5 +86,5 @@ metatests.test('Compress and uncompress file', async test => {
   test.assert(size < data.length);
 
   await test.resolves(utils.uncompress(file, opts), data);
-  await utils.rmRecursive(testDir);
+  await common.rmRecursivePromise(testDir);
 });
