@@ -70,12 +70,13 @@ metatests.case('', utils, {
   ],
 });
 
-metatests.test('Compress and uncompress file', async test => {
-  const dir = path.join(testDir, 'some', 'path', 'to', 'nested', 'dir');
-  await utils.mkdirpPromise(dir);
-  await fs.access(testDir);
+const compressTest = metatests.test();
+compressTest.endAfterSubtests();
+compressTest.beforeEach(() => utils.mkdirpPromise(testDir));
+compressTest.afterEach(() => common.rmRecursivePromise(testDir));
 
-  const file = path.join(testDir, 'file');
+compressTest.test('Compress and uncompress ZIP file', async test => {
+  const file = path.join(testDir, 'file.zip');
   const data = 'data'.repeat(1000);
   const opts = { compression: 'ZIP', encoding: 'utf8' };
 
@@ -86,5 +87,18 @@ metatests.test('Compress and uncompress file', async test => {
   test.assert(size < data.length);
 
   await test.resolves(utils.uncompress(file, opts), data);
-  await common.rmRecursivePromise(testDir);
+});
+
+compressTest.test('Compress and uncompress GZIP file', async test => {
+  const file = path.join(testDir, 'file.gzip');
+  const data = 'data'.repeat(1000);
+  const opts = { compression: 'GZIP', encoding: 'utf8' };
+
+  await fs.writeFile(file, data);
+  await utils.compress(file, 1024, 'GZIP');
+
+  const { size } = await fs.stat(file);
+  test.assert(size < data.length);
+
+  await test.resolves(utils.uncompress(file, opts), data);
 });
