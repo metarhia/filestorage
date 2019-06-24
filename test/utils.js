@@ -1,10 +1,10 @@
 'use strict';
 
-const fs = require('fs');
-const path = require('path');
+const fs = require('../lib/fs');
 const utils = require('../lib/utils');
-const metatests = require('metatests');
+const path = require('path');
 const common = require('@metarhia/common');
+const metatests = require('metatests');
 
 const testDir = path.join(__dirname, 'utils-test-root');
 
@@ -55,51 +55,50 @@ metatests.case('', utils, {
     ['data4', 'CRC32', '27a0d829'],
     ['data5', 'CRC32', '50a7e8bf'],
   ],
+  getDataStats: [
+    [
+      'data6',
+      'SHA256',
+      'CRC32',
+      {
+        checksum:
+          '9c67b4b76a18503009f542ef7c93dc7ac94aebbc6141515bea4e63e3068373a6',
+        dedupHash: 'c9aeb905',
+        size: 5,
+      },
+    ],
+  ],
 });
 
-metatests.testSync('getDataStats', test => {
-  const data = 'data6';
-  const cs = '9c67b4b76a18503009f542ef7c93dc7ac94aebbc6141515bea4e63e3068373a6';
-  const dh = 'c9aeb905';
-  const dataSize = 5;
+const compressTest = metatests.test();
+compressTest.endAfterSubtests();
+compressTest.beforeEach(() => utils.mkdirpPromise(testDir));
+compressTest.afterEach(() => common.rmRecursivePromise(testDir));
 
-  const stats = utils.getDataStats(data, 'SHA256', 'CRC32');
-  test.strictSame(stats.checksum, cs);
-  test.strictSame(stats.dedupHash, dh);
-  test.strictSame(stats.size, dataSize);
+compressTest.test('Compress and uncompress ZIP file', async test => {
+  const file = path.join(testDir, 'file.zip');
+  const data = 'data'.repeat(1000);
+  const opts = { compression: 'ZIP', encoding: 'utf8' };
+
+  await fs.writeFile(file, data);
+  await utils.compress(file, 1024, 'ZIP');
+
+  const { size } = await fs.stat(file);
+  test.assert(size < data.length);
+
+  await test.resolves(utils.uncompress(file, opts), data);
 });
 
-const finish = test => {
-  utils.rmdirp(testDir, err => {
-    test.error(err);
-    test.end();
-  });
-};
+compressTest.test('Compress and uncompress GZIP file', async test => {
+  const file = path.join(testDir, 'file.gzip');
+  const data = 'data'.repeat(1000);
+  const opts = { compression: 'GZIP', encoding: 'utf8' };
 
-metatests.test('', test => {
-  const dir = path.join(testDir, 'some', 'path', 'to', 'nested', 'dir');
-  common.mkdirp(dir, err => {
-    test.error(err);
-    test.strictSame(fs.existsSync(dir), true);
+  await fs.writeFile(file, data);
+  await utils.compress(file, 1024, 'GZIP');
 
-    const file = path.join(testDir, 'file');
-    const data = 'data'.repeat(1000);
-    fs.writeFile(file, data, err => {
-      test.error(err);
-      utils.compress(file, 1024, 'ZIP', err => {
-        test.error(err);
-        test.strictSame(fs.statSync(file).size < 4000, true);
+  const { size } = await fs.stat(file);
+  test.assert(size < data.length);
 
-        utils.uncompress(
-          file,
-          { compression: 'ZIP', encoding: 'utf8' },
-          (err, d) => {
-            test.error(err);
-            test.strictSame(d, data);
-            finish(test);
-          }
-        );
-      });
-    });
-  });
+  await test.resolves(utils.uncompress(file, opts), data);
 });
